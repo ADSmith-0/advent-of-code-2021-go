@@ -17,23 +17,44 @@ func Day1() {
 
 	scanner := bufio.NewScanner(file)
 
-	count := 0
-	prevNum := 0
+	values := make([]int, 0, 2000)
 
 	for scanner.Scan() {
 		num, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			log.Fatal(err)
 		}
-		if prevNum != 0 && num > prevNum {
-			count++
+		values = append(values, num)
+	}
+
+	averageValues := make([]int, 0, 2000)
+	initialAverageValue := 0
+
+	for i := range values {
+		if i <= 2 {
+			initialAverageValue += values[i]
 		}
-		prevNum = num
+		if i == 2 {
+			averageValues = append(averageValues, initialAverageValue)
+		}
+		if i > 2 {
+			averageValues = append(averageValues, averageValues[len(averageValues)-1]+values[i]-values[i-3])
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Total number:", count)
+	count := 0
+	for index, value := range averageValues {
+		if index == 0 {
+			continue
+		}
+		if value > averageValues[index-1] {
+			count++
+		}
+	}
+
+	fmt.Println("Number of increases", count)
 }
