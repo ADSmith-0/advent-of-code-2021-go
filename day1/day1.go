@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func Day1() {
+func Main() {
 	file, err := os.Open("./day1/data.txt")
 	if err != nil {
 		log.Fatal("Could not open file", err)
