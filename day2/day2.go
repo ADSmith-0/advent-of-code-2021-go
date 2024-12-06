@@ -32,6 +32,7 @@ func Main() {
 	if err != nil {
 		log.Fatal("Could not read file", err)
 	}
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	calcPos := calculatePosition()
@@ -54,15 +55,17 @@ func Main() {
 func calculatePosition() CalculatePosition {
 	depth := 0
 	position := 0
+	aim := 0
 
 	addMovement := func(direction string, amount int) {
 		switch direction {
 		case "up":
-			depth -= amount
+			aim -= amount
 		case "down":
-			depth += amount
+			aim += amount
 		case "forward":
 			position += amount
+			depth += amount * aim
 		default:
 			panic(fmt.Sprintf("unexpected day2.Direction: %#v", direction))
 		}
