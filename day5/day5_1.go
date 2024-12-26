@@ -20,10 +20,11 @@ func Day5_1() {
 
 	for scanner.Scan() {
 		text := scanner.Text()
-		isValid, coordinates := getPoints(text)
+		isValid, points := getPoints(text)
 		if isValid {
-			for _, coord := range coordinates {
-				grid[coord.y][coord.x]++
+			for _, point := range points {
+				fmt.Println(point)
+				grid[point.y][point.x]++
 			}
 		}
 	}
