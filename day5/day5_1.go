@@ -8,7 +8,7 @@ import (
 )
 
 func Day5_1() {
-	file, err := os.Open("./day5/data.txt")
+	file, err := os.Open("./day5/data-test.txt")
 	if err != nil {
 		log.Fatal("Could not open file", err)
 	}

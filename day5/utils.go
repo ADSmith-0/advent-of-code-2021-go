@@ -9,59 +9,49 @@ import (
 
 type Grid [1000][1000]int
 
-type Coordinates struct {
+type Point struct {
 	x int
 	y int
 }
 
-func getPoints(s string) (bool, []Coordinates) {
-	strCoordinates := strings.Split(s, " -> ")
-	rawCoordinates := make([][2]int, 0, 2)
-	coordinates := make([]Coordinates, 0, 10)
+func getPoints(s string) (bool, []Point) {
+	strPoints := strings.Split(s, " -> ")
+	points := make([]Point, 0, 10)
 
-	for _, strCoord := range strCoordinates {
-		splitCoordinates := strings.Split(strCoord, ",")
-		var numericCoordinates [2]int
-		numericX, err := strconv.ParseInt(splitCoordinates[0], 10, 32)
+	for _, strCoord := range strPoints {
+		splitPoints := strings.Split(strCoord, ",")
+		numericX, err := strconv.ParseInt(splitPoints[0], 10, 32)
 		if err != nil {
 			log.Fatal("Could not convert string to int", err)
 		}
-		numericCoordinates[0] = int(numericX)
-		numericY, err := strconv.ParseInt(splitCoordinates[1], 10, 32)
+
+		numericY, err := strconv.ParseInt(splitPoints[1], 10, 32)
 		if err != nil {
 			log.Fatal("Could not convert string to int", err)
 		}
-		numericCoordinates[1] = int(numericY)
 
-		rawCoordinates = append(rawCoordinates, numericCoordinates)
+		points = append(points, Point{x: int(numericX), y: int(numericY)})
 	}
 
-	startX := rawCoordinates[0][0]
-	endX := rawCoordinates[1][0]
-	startY := rawCoordinates[0][1]
-	endY := rawCoordinates[1][1]
-	rawXDiff := endX - startX
-	rawYDiff := endY - startY
+	line := line(points[0], points[1])
 
-	if rawXDiff != 0 && rawYDiff != 0 {
-		return false, coordinates
+	if line.dx != 0 && line.dy != 0 {
+		return false, points
 	}
 
-	if rawXDiff == 0 {
-		for yCoord := startY; yCoord != endY; yCoord += rawYDiff / abs(rawYDiff) {
-			coordinates = append(coordinates, Coordinates{x: startX, y: yCoord})
+	if line.dx == 0 {
+		for y := line.y1 + line.deltaY; y != line.y2; y += line.deltaY {
+			points = append(points, Point{x: line.x1, y: y})
 		}
-		coordinates = append(coordinates, Coordinates{x: startX, y: endY})
 	}
 
-	if rawYDiff == 0 {
-		for xCoord := startX; xCoord != endX; xCoord += rawXDiff / abs(rawXDiff) {
-			coordinates = append(coordinates, Coordinates{x: xCoord, y: startY})
+	if line.dy == 0 {
+		for x := line.x1 + line.deltaX; x != line.x2; x += line.deltaX {
+			points = append(points, Point{x: x, y: line.y1})
 		}
-		coordinates = append(coordinates, Coordinates{x: endX, y: startY})
 	}
 
-	return true, coordinates
+	return true, points
 }
 
 func abs(x int) int {
