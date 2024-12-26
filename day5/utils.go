@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type Grid [10][10]int
+type Grid [1000][1000]int
 
 type Point struct {
 	x int
@@ -23,8 +23,20 @@ func getPoints(s string) (bool, []Point) {
 
 	line := line(startPoint, endPoint)
 
-	if line.dx != 0 && line.dy != 0 {
+	if line.dx != 0 && line.dy != 0 && line.adx != line.ady {
 		return false, points
+	}
+
+	if line.adx == line.ady {
+		x := line.x1
+		y := line.y1
+
+		for i := 0; i <= line.adx; i++ {
+			points = append(points, Point{x: x, y: y})
+			x += line.deltaX
+			y += line.deltaY
+		}
+		return true, points
 	}
 
 	if line.dx == 0 {

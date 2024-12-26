@@ -8,7 +8,7 @@ import (
 )
 
 func Day5_1() {
-	file, err := os.Open("./day5/data-test.txt")
+	file, err := os.Open("./day5/data.txt")
 	if err != nil {
 		log.Fatal("Could not open file", err)
 	}
@@ -23,7 +23,6 @@ func Day5_1() {
 		isValid, points := getPoints(text)
 		if isValid {
 			for _, point := range points {
-				fmt.Println(point)
 				grid[point.y][point.x]++
 			}
 		}
